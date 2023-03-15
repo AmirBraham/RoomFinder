@@ -9,7 +9,7 @@ import json
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 # ------------CONFIG START ----------------------
-HEADLESS = False
+HEADLESS = True
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -48,7 +48,7 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 if (HEADLESS):
     options.add_argument("--headless=new")
-if ("ON_HEROKU" in os.environ):
+if (not ("ON_HEROKU" in os.environ)):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument('--no-sandbox')
     options.add_argument("--disable-gpu")
@@ -87,6 +87,7 @@ pwd.send_keys(PWD)
 loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
 loginButton.click()
 
+WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
 
 
 try:
@@ -96,7 +97,9 @@ try:
 except:
     print("Timeout Exception: Page did not load within 100 seconds.")
 print("login done , going to reservation page and sleeping for 10 secs")
-time.sleep(10)
+driver.implicitly_wait(10)
+WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
+WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-primary")))
 reserveButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[0]
 reserveButton.click()
 
@@ -108,7 +111,7 @@ try:
         EC.presence_of_element_located((By.ID, "date_sortie")))
 except:
     print("Timeout Exception:date_arrive and date_sortie did not load within 100 seconds.")
-time.sleep(5)
+driver.implicitly_wait(10)
 print("setting date_entree")
 el = driver.find_element(By.ID, "date_arrivee")
 WebDriverWait(driver, 100).until(
@@ -130,7 +133,7 @@ for b in buttons:
     if (b.get_attribute('innerText') == "Valider"):
         valider_button = b
 
-time.sleep(3)
+driver.implicitly_wait(10)
 if (valider_button is not None):
     valider_button.click()
 

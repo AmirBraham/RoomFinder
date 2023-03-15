@@ -52,7 +52,7 @@ if ("ON_HEROKU" in os.environ):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument('--no-sandbox')
     options.add_argument("--disable-gpu")
-    ## might not be needed
+    # might not be needed
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
 
@@ -73,6 +73,12 @@ pwd.send_keys(PWD)
 
 loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
 loginButton.click()
+try:
+    print("Waiting for Login...")
+    ele = WebDriverWait(driver, 100).until(
+        EC.presence_of_element_located((By.ID, "title_user_name")))
+except:
+    print("Timeout Exception: Page did not load within 100 seconds.")
 print("login done , going to reservation page")
 driver.get(
     "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")

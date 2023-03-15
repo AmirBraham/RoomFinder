@@ -100,7 +100,7 @@ driver.get(
 try:
     print("Waiting for date_arrivee and  date_sortie...")
     ele = WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.ID, date_arrivee)))
+        EC.presence_of_element_located((By.ID, "date_arrivee")))
     ele = WebDriverWait(driver, 100).until(
         EC.presence_of_element_located((By.ID, "date_sortie")))
 except:

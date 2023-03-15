@@ -78,7 +78,7 @@ driver.get(
     "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
 
 print("setting date_arrivee")
-
+print(driver.page_source)
 WebDriverWait(driver, 100).until(
     EC.presence_of_element_located((By.ID, "date_arrivee")))
 el = driver.find_element(By.ID, "date_arrivee")

@@ -99,7 +99,7 @@ except:
 print("login done , going to reservation page and sleeping for 10 secs")
 driver.implicitly_wait(10)
 WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-primary")))
+driver.implicitly_wait(5)
 reserveButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[0]
 reserveButton.click()
 

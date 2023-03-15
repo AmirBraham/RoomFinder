@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 # ------------CONFIG START ----------------------
-HEADLESS = False
+HEADLESS = True
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")

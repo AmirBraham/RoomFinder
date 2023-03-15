@@ -1,7 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 import pandas as pd

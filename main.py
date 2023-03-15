@@ -48,7 +48,7 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 if (HEADLESS):
     options.add_argument("--headless=new")
-if (not ("ON_HEROKU" in os.environ)):
+if (("ON_HEROKU" in os.environ)):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument('--no-sandbox')
     options.add_argument("--disable-gpu")

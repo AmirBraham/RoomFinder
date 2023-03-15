@@ -100,7 +100,8 @@ print("login done , going to reservation page and sleeping for 10 secs")
 driver.implicitly_wait(10)
 WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
 driver.implicitly_wait(5)
-reserveButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[0]
+reserveButton = driver.find_elements(By.CLASS_NAME, "btn-modulo-1")[0]
+print(reserveButton)
 reserveButton.click()
 
 try:

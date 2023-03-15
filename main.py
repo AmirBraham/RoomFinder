@@ -95,7 +95,8 @@ try:
         EC.presence_of_element_located((By.CLASS_NAME, "btn-primary")))
 except:
     print("Timeout Exception: Page did not load within 100 seconds.")
-print("login done , going to reservation page")
+print("login done , going to reservation page and sleeping for 10 secs")
+time.sleep(10)
 reserveButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[0]
 reserveButton.click()
 
@@ -107,7 +108,7 @@ try:
         EC.presence_of_element_located((By.ID, "date_sortie")))
 except:
     print("Timeout Exception:date_arrive and date_sortie did not load within 100 seconds.")
-
+time.sleep(5)
 print("setting date_entree")
 el = driver.find_element(By.ID, "date_arrivee")
 WebDriverWait(driver, 100).until(

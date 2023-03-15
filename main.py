@@ -9,7 +9,7 @@ import json
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 # ------------CONFIG START ----------------------
-HEADLESS = True
+HEADLESS = False
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -100,6 +100,16 @@ print("login done , going to reservation page and sleeping for 10 secs")
 driver.implicitly_wait(10)
 WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
 driver.implicitly_wait(5)
+print("printing page source : \n")
+print("---------------------------")
+print("\n")
+
+print(driver.page_source)
+
+print("\n")
+print("---------------------------")
+
+
 reserveButton = driver.find_elements(By.CLASS_NAME, "btn-modulo-1")[0]
 print(reserveButton)
 reserveButton.click()

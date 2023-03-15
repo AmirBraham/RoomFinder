@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 # ------------CONFIG START ----------------------
-HEADLESS = True
+HEADLESS = False
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -57,6 +57,7 @@ if (("ON_HEROKU" in os.environ)):
     # might not be needed
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
+
 binary = FirefoxBinary(os.environ.get('FIREFOX_BIN'))
 
 driver = webdriver.Firefox(

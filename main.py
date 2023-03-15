@@ -5,6 +5,8 @@ from sendgrid import SendGridAPIClient
 import pandas as pd
 import os
 import json
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait 
 #------------CONFIG START ----------------------
 HEADLESS = True
 if("ON_HEROKU" in os.environ):
@@ -69,15 +71,18 @@ print("login done , going to reservation page")
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
 
 print("setting date_arrivee")
+WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "date_arrivee")))
 el = driver.find_element(By.ID,"date_arrivee")
-
+WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "option")))
 option = el.find_elements(By.TAG_NAME,'option')[-1]
 option.click()
 
 print("setting date_sortie")
+WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID,"date_sortie")))
 
 bail = driver.find_element(By.ID,"date_sortie")
 bail.send_keys(DATE_SORTIE)
+WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME,"btn-success")))
 
 buttons = driver.find_elements(By.CLASS_NAME,"btn-success")
 valider_button = None
@@ -95,6 +100,8 @@ else:
     exit()
 
 print("fetching reservation page")
+
+WebDriverWait(driver, 100).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
 with open("index.php", "w", encoding='utf-8') as f:
     f.write(driver.page_source)

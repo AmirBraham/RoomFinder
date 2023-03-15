@@ -9,7 +9,7 @@ import json
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 # ------------CONFIG START ----------------------
-HEADLESS = True
+HEADLESS = False
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -87,15 +87,17 @@ pwd.send_keys(PWD)
 loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
 loginButton.click()
 
+
+
 try:
     print("Waiting for Login...")
     ele = WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.ID, "title_user_name")))
+        EC.presence_of_element_located((By.CLASS_NAME, "btn-primary")))
 except:
     print("Timeout Exception: Page did not load within 100 seconds.")
 print("login done , going to reservation page")
-driver.get(
-    "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
+reserveButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[0]
+reserveButton.click()
 
 try:
     print("Waiting for date_arrivee and  date_sortie...")

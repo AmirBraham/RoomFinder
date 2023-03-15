@@ -60,10 +60,23 @@ driver = webdriver.Chrome("chromedriver", options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")
 
+try:
+    print("Waiting for login button...")
+    ele = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, "button_connexion")))
+except:
+    print("Timeout Exception: button did not load within 100 seconds.")
 
 elem = driver.find_element(By.ID, "button_connexion")
 elem.click()
-
+try:
+    print("Waiting for email field and pwd field...")
+    ele = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, "login-email")))
+    ele = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, "login-password")))
+except:
+    print("Timeout Exception: Fields did not load within 30 seconds.")
 print("signing in")
 email = driver.find_element(By.ID, "login-email")
 email.send_keys(EMAIL)
@@ -73,6 +86,7 @@ pwd.send_keys(PWD)
 
 loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
 loginButton.click()
+
 try:
     print("Waiting for Login...")
     ele = WebDriverWait(driver, 100).until(
@@ -83,10 +97,16 @@ print("login done , going to reservation page")
 driver.get(
     "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
 
-print("setting date_arrivee")
-print(driver.page_source)
-WebDriverWait(driver, 100).until(
-    EC.presence_of_element_located((By.ID, "date_arrivee")))
+try:
+    print("Waiting for date_arrivee and  date_sortie...")
+    ele = WebDriverWait(driver, 100).until(
+        EC.presence_of_element_located((By.ID, date_arrivee)))
+    ele = WebDriverWait(driver, 100).until(
+        EC.presence_of_element_located((By.ID, "date_sortie")))
+except:
+    print("Timeout Exception:date_arrive and date_sortie did not load within 100 seconds.")
+
+print("setting date_entree")
 el = driver.find_element(By.ID, "date_arrivee")
 WebDriverWait(driver, 100).until(
     EC.presence_of_element_located((By.TAG_NAME, "option")))
@@ -94,8 +114,7 @@ option = el.find_elements(By.TAG_NAME, 'option')[-1]
 option.click()
 
 print("setting date_sortie")
-WebDriverWait(driver, 100).until(
-    EC.presence_of_element_located((By.ID, "date_sortie")))
+
 
 bail = driver.find_element(By.ID, "date_sortie")
 bail.send_keys(DATE_SORTIE)

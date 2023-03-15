@@ -9,7 +9,7 @@ import json
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 # ------------CONFIG START ----------------------
-HEADLESS = False
+HEADLESS = True
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -44,8 +44,7 @@ else:
 # ------------CONFIG END ----------------------
 
 
-options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
+options = webdriver.FirefoxOptions()
 if (HEADLESS):
     options.add_argument("--headless=new")
 if (("ON_HEROKU" in os.environ)):
@@ -55,7 +54,7 @@ if (("ON_HEROKU" in os.environ)):
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
 
-driver = webdriver.Chrome("chromedriver", options=options)
+driver = webdriver.Firefox(options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")
 

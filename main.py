@@ -45,7 +45,9 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 if(HEADLESS):
    options.add_argument("--headless=new")
-
+if("ON_HEROKU" in os.environ):
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome("chromedriver",options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")

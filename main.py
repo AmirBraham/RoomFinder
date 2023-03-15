@@ -50,8 +50,7 @@ if (HEADLESS):
     options.add_argument("--headless=new")
 if (("ON_HEROKU" in os.environ)):
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument('--no-sandbox')
-    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
     # might not be needed
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
@@ -83,9 +82,11 @@ email.send_keys(EMAIL)
 
 pwd = driver.find_element(By.ID, "login-password")
 pwd.send_keys(PWD)
+from selenium.webdriver.common.keys import Keys
 
-loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
-loginButton.click()
+pwd.send_keys(Keys.RETURN)
+
+
 
 WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
 

@@ -1,3 +1,4 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from sendgrid.helpers.mail import Mail
@@ -6,10 +7,10 @@ import pandas as pd
 import os
 import json
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait 
-#------------CONFIG START ----------------------
+from selenium.webdriver.support.ui import WebDriverWait
+# ------------CONFIG START ----------------------
 HEADLESS = True
-if("ON_HEROKU" in os.environ):
+if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
         PWD = os.environ.get("PWD")
@@ -23,7 +24,7 @@ if("ON_HEROKU" in os.environ):
         print("something went wrong loading ENV variables , exiting..")
         exit()
 else:
-    if(not os.path.exists("config.json")):
+    if (not os.path.exists("config.json")):
         print("you are running this script locally , please include a config.json on next launch")
         exit()
     try:
@@ -40,17 +41,22 @@ else:
     except:
         print("something went wrong loading config.json , exiting..")
         exit()
-#------------CONFIG END ----------------------
+# ------------CONFIG END ----------------------
 
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
-if(HEADLESS):
-   options.add_argument("--headless=new")
-if("ON_HEROKU" in os.environ):
-    options.add_argument("--no-sandbox")
+if (HEADLESS):
+    options.add_argument("--headless=new")
+if ("ON_HEROKU" in os.environ):
     options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome("chromedriver",options=options)
+    options.add_argument('--no-sandbox')
+    options.add_argument("--disable-gpu")
+    ## might not be needed
+    options.add_argument("--remote-debugging-port=9222")
+    options.add_argument('--window-size=1920x1480')
+
+driver = webdriver.Chrome("chromedriver", options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")
 
@@ -59,40 +65,45 @@ elem = driver.find_element(By.ID, "button_connexion")
 elem.click()
 
 print("signing in")
-email = driver.find_element(By.ID,"login-email")
+email = driver.find_element(By.ID, "login-email")
 email.send_keys(EMAIL)
 
-pwd = driver.find_element(By.ID,"login-password")
+pwd = driver.find_element(By.ID, "login-password")
 pwd.send_keys(PWD)
 
-loginButton = driver.find_elements(By.CLASS_NAME,"btn-primary")[1]
+loginButton = driver.find_elements(By.CLASS_NAME, "btn-primary")[1]
 loginButton.click()
 print("login done , going to reservation page")
-driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
+driver.get(
+    "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php")
 
 print("setting date_arrivee")
-WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.ID, "date_arrivee")))
-el = driver.find_element(By.ID,"date_arrivee")
-WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.TAG_NAME, "option")))
-option = el.find_elements(By.TAG_NAME,'option')[-1]
+
+WebDriverWait(driver, 100).until(
+    EC.presence_of_element_located((By.ID, "date_arrivee")))
+el = driver.find_element(By.ID, "date_arrivee")
+WebDriverWait(driver, 100).until(
+    EC.presence_of_element_located((By.TAG_NAME, "option")))
+option = el.find_elements(By.TAG_NAME, 'option')[-1]
 option.click()
 
 print("setting date_sortie")
-WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.ID,"date_sortie")))
+WebDriverWait(driver, 100).until(
+    EC.presence_of_element_located((By.ID, "date_sortie")))
 
-bail = driver.find_element(By.ID,"date_sortie")
+bail = driver.find_element(By.ID, "date_sortie")
 bail.send_keys(DATE_SORTIE)
-WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.CLASS_NAME,"btn-success")))
+WebDriverWait(driver, 100).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "btn-success")))
 
-buttons = driver.find_elements(By.CLASS_NAME,"btn-success")
+buttons = driver.find_elements(By.CLASS_NAME, "btn-success")
 valider_button = None
 for b in buttons:
-    if(b.get_attribute('innerText') == "Valider"):
+    if (b.get_attribute('innerText') == "Valider"):
         valider_button = b
 
-import time
 time.sleep(3)
-if(valider_button is not None):
+if (valider_button is not None):
     valider_button.click()
 
 else:
@@ -101,7 +112,8 @@ else:
 
 print("fetching reservation page")
 
-WebDriverWait(driver, 200).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+WebDriverWait(driver, 200).until(lambda driver: driver.execute_script(
+    'return document.readyState') == 'complete')
 
 with open("index.php", "w", encoding='utf-8') as f:
     f.write(driver.page_source)
@@ -116,6 +128,7 @@ for df in dfs:
     if ("N Logement" not in df or "Nbr occupantslogement" not in df):
         continue
     df = df[(df['Nbr occupantslogement'] == NBR_LOGEMENT)]
+
     def filterResidences(df):
         t = tuple(RESIDENCES)
         df = df[df['N Logement'].str.startswith(t)]
@@ -150,7 +163,7 @@ if (len(results) > 0):
         MESSAGE += "\n ------------------------- \n"
     print(MESSAGE)
     print("sending mail right now !! ")
-    send_email(["amirbrahamm@gmail.com"],MESSAGE,"Logement Césale Trouvé")
+    send_email(["amirbrahamm@gmail.com"], MESSAGE, "Logement Césale Trouvé")
 else:
     print("pas de logement , Amir le pauvre :\\")
 

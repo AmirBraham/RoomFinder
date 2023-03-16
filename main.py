@@ -76,7 +76,11 @@ def main():
         LOGIN_URL, data=login_payload, headers=dict(referer=LOGIN_URL))
     res = session_requests.get(URL,headers=dict(referer=URL))
     soup = BeautifulSoup(res.text, "html.parser")
-    subject_options = [i.get_text() for i in soup.find('select', attrs = {'name': 'date_arrivee'} ).findChildren("option") if i != "\n" and i]
+    select = soup.find('select', attrs = {'name': 'date_arrivee'} )
+    if(select is None):
+        print("error finding select , exiting ..")
+        exit()
+    subject_options = [i.get_text() for i in select.findChildren("option") if i != "\n" and i]
     if(len(subject_options) < 2):
         print("something went wrong ")
         print(subject_options)

@@ -8,10 +8,9 @@ import os
 import json
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-
 # ------------CONFIG START ----------------------
-HEADLESS = True
+HEADLESS = False
+VERBOSE = False
 if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
@@ -46,9 +45,8 @@ else:
 # ------------CONFIG END ----------------------
 
 
-
-
-options = webdriver.FirefoxOptions()
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)
 if (HEADLESS):
     options.add_argument("--headless=new")
 if (("ON_HEROKU" in os.environ)):
@@ -58,12 +56,7 @@ if (("ON_HEROKU" in os.environ)):
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
 
-binary = FirefoxBinary(os.environ.get('FIREFOX_BIN'))
-
-driver = webdriver.Firefox(
-		firefox_binary=binary,
-		executable_path=os.environ.get('GECKODRIVER_PATH'),
-		options=options)
+driver = webdriver.Chrome("chromedriver", options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")
 
@@ -109,14 +102,15 @@ print("login done , going to reservation page and sleeping for 10 secs")
 driver.implicitly_wait(10)
 WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'page_loading')))
 driver.implicitly_wait(5)
-print("printing page source : \n")
-print("---------------------------")
-print("\n")
+if(VERBOSE):
+    print("printing page source : \n")
+    print("---------------------------")
+    print("\n")
 
-print(driver.page_source)
+    print(driver.page_source)
 
-print("\n")
-print("---------------------------")
+    print("\n")
+    print("---------------------------")
 
 
 reserveButton = driver.find_elements(By.CLASS_NAME, "btn-modulo-1")[0]

@@ -1,4 +1,3 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from sendgrid.helpers.mail import Mail
@@ -6,6 +5,8 @@ from sendgrid import SendGridAPIClient
 import pandas as pd
 import os
 import json
+from webdriver_manager.chrome import ChromeDriverManager
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 # ------------CONFIG START ----------------------
@@ -56,7 +57,7 @@ if (("ON_HEROKU" in os.environ)):
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument('--window-size=1920x1480')
 
-driver = webdriver.Chrome("chromedriver", options=options)
+driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
 
 driver.get("https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php")
 

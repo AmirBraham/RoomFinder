@@ -14,6 +14,7 @@ Il s'agit d'un script simple qui vérifie la disponibilité des chambres sur le 
     "TO_EMAILS":"amirbrahamm@gmail.com",
     "SENDGRID_API_KEY":"VOTRE_API_KEY"
 }
+```
 
 Pour exécuter le script en local, créez le fichier config.json et remplissez-le avec les valeurs appropriées. Ensuite, exécutez le script en utilisant un interpréteur Python.
 

@@ -16,7 +16,6 @@ if ("ON_HEROKU" in os.environ):
     try:
         EMAIL = os.environ.get("EMAIL")
         PWD = os.environ.get("PWD")
-        DATE_SORTIE = os.environ.get("DATE_SORTIE")
         NBR_LOGEMENT = int(os.environ.get("NBR_LOGEMENT"))
         RESIDENCES = os.environ.get("RESIDENCES").split(",")
         FROM_EMAIL = os.environ.get("FROM_EMAIL")
@@ -34,7 +33,6 @@ else:
         data = json.load(f)
         EMAIL = data["EMAIL"]
         PWD = data["PWD"]
-        DATE_SORTIE = data["DATE_SORTIE"]
         NBR_LOGEMENT = int(data["NBR_LOGEMENT"])
         RESIDENCES = data["RESIDENCES"].split(",")
         FROM_EMAIL = data["FROM_EMAIL"]
@@ -63,7 +61,6 @@ def send_email(emails, notification_text, subject):
         return "Email Sent"
     except Exception as e:
         return e.message
-
 
 
 def main():
@@ -118,8 +115,6 @@ def main():
         results.append(df)
 
 
-
-
     if (len(results) > 0):
         # YAY , on a trouvé une chambre : envoie du mail :
         MESSAGE = """"""
@@ -131,7 +126,6 @@ def main():
         send_email(["amirbrahamm@gmail.com"], MESSAGE, "Logement Césale Trouvé")
     else:
         print("pas de logement , Amir le pauvre :\\")
-
 
 if __name__ == '__main__':
     main()

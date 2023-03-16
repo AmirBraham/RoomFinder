@@ -10,7 +10,6 @@ from sendgrid import SendGridAPIClient
 import pandas as pd
 
 # ------------CONFIG START ----------------------
-HEADLESS = False
 VERBOSE = False
 if ("ON_HEROKU" in os.environ):
     try:

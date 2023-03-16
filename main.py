@@ -76,7 +76,11 @@ def main():
         LOGIN_URL, data=login_payload, headers=dict(referer=LOGIN_URL))
     res = session_requests.get(URL,headers=dict(referer=URL))
     soup = BeautifulSoup(res.text, "html.parser")
-    subject_options = [i.get_text() for i in soup.find('select', attrs = {'name': 'date_arrivee'} ).findChildren() if i != "\n"]
+    subject_options = [i.get_text() for i in soup.find('select', attrs = {'name': 'date_arrivee'} ).findChildren("option") if i != "\n" and i]
+    if(len(subject_options) < 2):
+        print("something went wrong ")
+        print(subject_options)
+        exit()
     date_arrivee = subject_options[-1]
     date_arrivee = datetime.strptime(date_arrivee,"%d/%m/%Y")
     date_sortie = date_arrivee +  relativedelta(months=10)
@@ -95,14 +99,15 @@ def main():
         f.write(str(soup))
 
     dfs = pd.read_html("index.php", encoding='utf-8')
-
+ 
     results = []
     for df in dfs:
         df.columns = df.columns.str.replace('°', '')
         df.columns = df.columns.str.replace('º', '')
-        if ("N Logement" not in df or "Nbr occupantslogement" not in df):
+
+        if ("N Logement" not in df or "Nbr occupants logement" not in df):
             continue
-        df = df[(df['Nbr occupantslogement'] == NBR_LOGEMENT)]
+        df = df[(df['Nbr occupants logement'] == NBR_LOGEMENT)]
 
         def filterResidences(df):
             t = tuple(RESIDENCES)
@@ -111,6 +116,7 @@ def main():
         df = filterResidences(df=df)
         if (df.empty):
             continue
+
         results.append(df)
 
 
@@ -120,9 +126,8 @@ def main():
         for df in results:
             MESSAGE += df.to_html()
             MESSAGE += "\n ------------------------- \n"
-        print(MESSAGE)
         print("sending mail right now !! ")
-        send_email(["amirbrahamm@gmail.com"], MESSAGE, "Logement Césale Trouvé")
+        #send_email(["amirbrahamm@gmail.com"], MESSAGE, "Logement Césale Trouvé")
     else:
         print("pas de logement , Amir le pauvre :\\")
 

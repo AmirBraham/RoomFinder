@@ -131,7 +131,7 @@ def main():
             MESSAGE += df.to_html()
             MESSAGE += "\n ------------------------- \n"
         print("sending mail right now !! ")
-        #send_email(["amirbrahamm@gmail.com"], MESSAGE, "Logement Césale Trouvé")
+        send_email(TO_EMAILS, MESSAGE, "Logement Césale Trouvé")
     else:
         print("pas de logement , Amir le pauvre :\\")
 

@@ -1,7 +1,7 @@
 
-# Vérificateur de disponibilité de chambres Cesale
+# Vérificateur de disponibilité de chambres Cesale / Arpej
 
-Il s'agit d'un script simple qui vérifie la disponibilité des chambres sur le site web de Cesale. Pour fonctionner, il nécessite un fichier de configuration nommé `config.json` qui doit être placé dans le répertoire racine. Le fichier doit contenir les attributs suivants :
+Il s'agit d'un script simple qui vérifie la disponibilité des chambres sur le site web de Cesale et Arpej. Pour fonctionner, il nécessite un fichier de configuration nommé `config.json` qui doit être placé dans le répertoire racine. Le fichier doit contenir les attributs suivants :
 
 ```perl
 {
@@ -26,7 +26,7 @@ Le script est hébergé sur mon compte Heroku et s'exécute toutes les heures. I
 
 # Cesale Availability Checker
 
-This is a simple script that checks for room availability on the Cesale website. It requires a configuration file to run, which should be named `config.json` and placed in the root directory. The file should have the following attributes:
+This is a simple script that checks for room availability on the Cesale website and arpej website. It requires a configuration file to run, which should be named `config.json` and placed in the root directory. The file should have the following attributes:
 
 ```perl
 {

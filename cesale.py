@@ -84,9 +84,10 @@ def main():
     }
     
     # Perform login
+    print("login payload : ")
+    print(login_payload)
     result = session_requests.post(
         LOGIN_URL, data=login_payload,cookies=cookies, headers=headers)
-    print(result.text)
 
     res = session_requests.get(URL,cookies=cookies, headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")

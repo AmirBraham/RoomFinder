@@ -74,8 +74,9 @@ def main():
     # Perform login
     result = session_requests.post(
         LOGIN_URL, data=login_payload, headers=dict(referer=LOGIN_URL))
+    print(result.text)
+    
     res = session_requests.get(URL,headers=dict(referer=URL))
-    print(res.text)
     soup = BeautifulSoup(res.text, "html.parser")
     select = soup.find('select', attrs = {'name': 'date_arrivee'} )
     if(select is None):

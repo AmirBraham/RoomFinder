@@ -13,13 +13,13 @@ import pandas as pd
 VERBOSE = False
 if ("ON_HEROKU" in os.environ):
     try:
-        EMAIL = os.environ.get("EMAIL")
-        PWD = os.environ.get("PWD")
-        NBR_LOGEMENT = int(os.environ.get("NBR_LOGEMENT"))
-        RESIDENCES = os.environ.get("RESIDENCES").split(",")
-        FROM_EMAIL = os.environ.get("FROM_EMAIL")
-        TO_EMAILS = os.environ.get("TO_EMAILS").split(",")
-        SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+        EMAIL = os.getenv("cesale_mail")
+        PWD = os.getenv("cesale_mdp")
+        NBR_LOGEMENT = int(os.getenv("NBR_LOGEMENT"))
+        RESIDENCES = os.getenv("RESIDENCES").split(",")
+        FROM_EMAIL = os.getenv("FROM_EMAIL")
+        TO_EMAILS = os.getenv("TO_EMAILS").split(",")
+        SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
     except:
         print("something went wrong loading ENV variables , exiting..")
         exit()
@@ -151,5 +151,4 @@ def main():
         print("pas de logement , Amir le pauvre :\\")
 
 
-if __name__ == '__main__':
-    main()
+main()

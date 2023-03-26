@@ -46,6 +46,7 @@ else:
 LOGIN_URL = "https://logement.cesal-residentiel.fr/espace-resident/cesal_login.php"
 URL = "https://logement.cesal-residentiel.fr/espace-resident/cesal_mon_logement_reservation.php"
 
+
 def send_email(emails, notification_text, subject):
     html_content = '<strong>' + notification_text + '</strong>'
     emails = emails
@@ -70,26 +71,38 @@ def main():
         "login-email": EMAIL,
         "login-password": PWD
     }
-
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+         
+          'referer': LOGIN_URL}
+    cookies = {
+        "_ga": "GA1.2.1938810788.1678984314",
+        "_gid": "GA1.2.1032678773.1678984314",
+        "CESAL_RESIDENTIEL_LOGEMENT": "kr820bgmah2h6cu8ragri39m2a",
+        "CSLAC_RESIDENTIEL_LOGEMENT": "321065432106543210654321065XU",
+        "_gat_gtag_UA_144222640_2": "1"
+    }
+    
     # Perform login
     result = session_requests.post(
-        LOGIN_URL, data=login_payload, headers=dict(referer=LOGIN_URL))
+        LOGIN_URL, data=login_payload,cookies=cookies, headers=headers)
     print(result.text)
-    
-    res = session_requests.get(URL,headers=dict(referer=URL))
+
+    res = session_requests.get(URL,cookies=cookies, headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")
-    select = soup.find('select', attrs = {'name': 'date_arrivee'} )
-    if(select is None):
+    select = soup.find('select', attrs={'name': 'date_arrivee'})
+    if (select is None):
         print("error finding select , exiting ..")
         exit()
-    subject_options = [i.get_text() for i in select.findChildren("option") if i != "\n" and i]
-    if(len(subject_options) < 2):
+    subject_options = [i.get_text()
+                       for i in select.findChildren("option") if i != "\n" and i]
+    if (len(subject_options) < 2):
         print("something went wrong ")
         print(subject_options)
         exit()
     date_arrivee = subject_options[-1]
-    date_arrivee = datetime.strptime(date_arrivee,"%d/%m/%Y")
-    date_sortie = date_arrivee +  relativedelta(months=10)
+    date_arrivee = datetime.strptime(date_arrivee, "%d/%m/%Y")
+    date_sortie = date_arrivee + relativedelta(months=10)
     print("date_arrivee : " + str(date_arrivee.date()))
     print("date_sortie : " + str(date_sortie.date()))
     reservation_payload = {
@@ -99,13 +112,13 @@ def main():
     }
     # Scrape url
     result = session_requests.post(
-        URL, data=reservation_payload,  headers=dict(referer=URL))
+        URL,cookies=cookies, data=reservation_payload,  headers=headers)
     soup = BeautifulSoup(result.text, "html.parser")
     with open("index.php", "w", encoding='utf-8') as f:
         f.write(str(soup))
 
     dfs = pd.read_html("index.php", encoding='utf-8')
- 
+
     results = []
     for df in dfs:
         df.columns = df.columns.str.replace('°', '')
@@ -125,7 +138,6 @@ def main():
 
         results.append(df)
 
-
     if (len(results) > 0):
         # YAY , on a trouvé une chambre : envoie du mail :
         MESSAGE = """"""
@@ -136,6 +148,7 @@ def main():
         send_email(TO_EMAILS, MESSAGE, "Logement Césale Trouvé")
     else:
         print("pas de logement , Amir le pauvre :\\")
+
 
 if __name__ == '__main__':
     main()
